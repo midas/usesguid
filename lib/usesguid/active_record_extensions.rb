@@ -31,7 +31,7 @@ module Usesguid
         class_eval do
           set_primary_key options[:column] if options[:column]
           
-          before_create :assign_guid
+          before_validation :assign_guid
 
           # Give this record a guid id.  Public method so people can call it before save if necessary.
           def assign_guid
