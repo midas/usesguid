@@ -23,13 +23,7 @@ This library is free software; you can redistribute it and/or modify it
 under the terms of the MIT license.
 
 
-== TO USE
-
-  sudo gem install usesguid
-
-In Rails environment file:
-
-  config.gem "usesguid"
+== USAGE
 
 define ID as char(22)
 call "usesguid" in ActiveRecord class declaration, like:
@@ -38,13 +32,34 @@ call "usesguid" in ActiveRecord class declaration, like:
     usesguid			
   end
 
-if your ID field is not called "ID", call "usesguid :column =>'IdColumnName' "
+If your ID field is not called "ID", call "usesguid :column =>'IdColumnName'"
 
-If you use MySQL as your database, you can make guid generation much faster
-by putting this in config/environment.rb:
+In order to use a GUID in another field that is not your primary key, id call usesguid like:
 
-  ActiveRecord::Base.guid_generator = :mysql
+  class Mymodel < ActiveRecord::Base
+    usesguid, :as => :field
+  end
 
-== TODO
+If you would like to validate your GUID a validation macro is provided:
 
-* Add tests
+  class Mymodel < ActiveRecord::Base
+    usesguid, :as => :field
+
+    validate_guid
+  end
+
+validate_guid is the same as:
+
+  validates_presence_of( ActiveRecord::Base.guid_column )
+  validates_uniqueness_of( ActiveRecord::Base.guid_column )
+  validates_length_of( ActiveRecord::Base.guid_column, :maximum => (ActiveRecord::Base.guid_compression == 's22' ? 22 : 36), :allow_blank => true )
+
+If you use MySQL or SQL Server as your database, you can make guid generation much faster by using the 
+database to generate GUIDs.
+
+You can accomplish this by specifying the GUID generator in an initializer file.  There are also options
+for guid_compression and guid_column.
+
+  ActiveRecord::Base.guid_generator   = :mysql # mysql or sqlserver
+  ActiveRecord::Base.guid_compression = :s     # :s for string or :s22 for compressed string
+  ActiveRecord::Base.guid_column      = 'guid' # the name of your GUID column
