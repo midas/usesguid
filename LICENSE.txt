@@ -1,5 +1,6 @@
-Copyright (c) 2005 Assembla, Inc.
-Portions Copyright (c) 2008 Intuit
+Copyright (c) 2013 Jason Harrelson
+
+MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
