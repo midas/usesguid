@@ -6,47 +6,54 @@
 # 3. set the id before create instead of after initialize
 #
 # MIT License
-
-#require 'uuid22'
-#require 'uuid_mysql'
-
 module Usesguid
   module ActiveRecordExtensions
-    
-    #def self.append_features( base )
+
     def self.included( base )
       super
       base.extend( ClassMethods )
     end
 
-    
+
     module ClassMethods
-      
+
       # guid_generator can be :timestamp or :mysql
       def guid_generator=(generator); class_eval { @guid_generator = generator } end
       def guid_generator; class_eval { @guid_generator || :timestamp } end
- 
-      def usesguid(options = {})
-                
-        class_eval do
-          set_primary_key options[:column] if options[:column]
-          
-          before_create :assign_guid
 
-          # Give this record a guid id.  Public method so people can call it before save if necessary.
+      def guid_compression=(compression); class_eval { @guid_compression = compression } end
+      def guid_compression; class_eval { @guid_compression || 's' } end
+
+      def guid_column=(column); class_eval { @guid_column = column } end
+      def guid_column; class_eval { @guid_column || 'id' } end
+
+      def usesguid(options = {})
+        options[:as] ||= :primary_key
+
+        class_eval do
+          if options[:as] == :primary_key && options[:column]
+            self.primary_key = options[:column]
+          end
+
+          before_validation :assign_guid
+
           def assign_guid
-            self[self.class.primary_key] ||= case ActiveRecord::Base.guid_generator
-              when :mysql then UUID.mysql_create(self.connection)
-              when :timestamp then UUID.timestamp_create()
-              else raise "Unrecognized guid generator '#{ActiveRecord::Base.guid_generator.to_s}'"
-            end.to_s22
+            self[ActiveRecord::Base.guid_column] ||= (ActiveRecord::Base.guid_generator == :database ?
+                                                UUID.send( "#{ActiveRecord::Base.connection.adapter_name.downcase}_create" ) :
+                                                UUID.timestamp_create).send( "to_#{ActiveRecord::Base.guid_compression}" )
           end
 
         end
 
       end
 
+      def validate_guid( options={} )
+        validates_presence_of( ActiveRecord::Base.guid_column )
+        validates_uniqueness_of( ActiveRecord::Base.guid_column )
+        validates_length_of( ActiveRecord::Base.guid_column, :maximum => (ActiveRecord::Base.guid_compression == 's22' ? 22 : 36), :allow_blank => true )
+      end
+
     end
-    
+
   end
 end

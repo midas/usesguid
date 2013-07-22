@@ -34,58 +34,58 @@ require 'digest/md5'
 #  Because it's impossible to hype a UUID generator on its genuine merits,
 #  I give you... Really bad ASCII art in the comments:
 #
-#                                                                  
-#                \                                                 
-#                /                                                   
-#               +                                                  
-#              ]                                                   
-#              ]                                                   
-#              |                                                    
-#             /                                                     
-#           Mp___                                                  
-#              `~0NNp,                                             
-#               __ggM'                                             
-#             g0M~"`                                               
-#            ]0M*-                                                 
-#                                                                  
-#                    ___                                           
-#                _g000M00g,                                        
-#              j0M~      ~M&                                       
-#            j0M"          ~N,                                     
-#           j0P              M&                                    
-#          jM                  1                                   
-#         j0                   ]1                                  
-#        .0P                    0,                                 
-#        00'                    M&                                 
-#        0M                     ]0L                                
-#       ]0f         ___          M0                                
-#        M0NN0M00MMM~"'M          0&                               
-#          `~          ~0         ]0,                              
-#                       ]M        ]0&                              
-#                        M&        M0,                             
-#               ____gp_   M&        M0_                            
-#            __p0MPM8MM&_  M/        ^0&_                          
-#           gN"`       M0N_j0,         MM&__                       
-#         _gF           `~M0P`   __      M00g                      
-#        g0'                    gM0&,     ~M0&                     
-#      _pM`                     0, ]M1     "00&                    
-#     _00                    /g1MMgj01      ]0MI                   
-#    _0F                     t"M,7MMM        00I                   
-#   g0'                  _   N&j&            40'                   
-#  g0'                _p0Mq_   '             N0QQNM#g,             
-#  0'              _g0000000g__              ~M@MMM000g            
-#  f             _jM00@`  ~M0000Mgppg,             "P00&           
-# |             g000~       `~M000000&_               ~0&          
-# ]M          _M00F              "00MM`                ~#&         
-# `0L        m000F                #E                    "0f        
-#   9r     j000M`                 40,                    00        
-#    ]0g_ j00M`                   ^M0MNggp#gqpg          M0&       
-#     ~MPM0f                         ~M000000000g_ ,_ygg&M00f      
-#                                        `~~~M00000000000000       
-#                                              `M0000000000f       
-#                                                  ~@@@MF~`        
-#                                                                  
-#                                                                  
+#
+#                \
+#                /
+#               +
+#              ]
+#              ]
+#              |
+#             /
+#           Mp___
+#              `~0NNp,
+#               __ggM'
+#             g0M~"`
+#            ]0M*-
+#
+#                    ___
+#                _g000M00g,
+#              j0M~      ~M&
+#            j0M"          ~N,
+#           j0P              M&
+#          jM                  1
+#         j0                   ]1
+#        .0P                    0,
+#        00'                    M&
+#        0M                     ]0L
+#       ]0f         ___          M0
+#        M0NN0M00MMM~"'M          0&
+#          `~          ~0         ]0,
+#                       ]M        ]0&
+#                        M&        M0,
+#               ____gp_   M&        M0_
+#            __p0MPM8MM&_  M/        ^0&_
+#           gN"`       M0N_j0,         MM&__
+#         _gF           `~M0P`   __      M00g
+#        g0'                    gM0&,     ~M0&
+#      _pM`                     0, ]M1     "00&
+#     _00                    /g1MMgj01      ]0MI
+#    _0F                     t"M,7MMM        00I
+#   g0'                  _   N&j&            40'
+#  g0'                _p0Mq_   '             N0QQNM#g,
+#  0'              _g0000000g__              ~M@MMM000g
+#  f             _jM00@`  ~M0000Mgppg,             "P00&
+# |             g000~       `~M000000&_               ~0&
+# ]M          _M00F              "00MM`                ~#&
+# `0L        m000F                #E                    "0f
+#   9r     j000M`                 40,                    00
+#    ]0g_ j00M`                   ^M0MNggp#gqpg          M0&
+#     ~MPM0f                         ~M000000000g_ ,_ygg&M00f
+#                                        `~~~M00000000000000
+#                                              `M0000000000f
+#                                                  ~@@@MF~`
+#
+#
 
 #= uuidtools.rb
 #
@@ -108,7 +108,7 @@ class UUID
   @@last_clock_sequence = nil
   @@state_file = nil
   @@mutex = Mutex.new
-  
+
   def initialize(time_low, time_mid, time_hi_and_version,
       clock_seq_hi_and_reserved, clock_seq_low, nodes)
     unless time_low >= 0 && time_low < 4294967296
@@ -137,7 +137,7 @@ class UUID
     unless nodes.respond_to? :size
       raise ArgumentError,
         "Expected nodes to respond to :size."
-    end  
+    end
     unless nodes.size == 6
       raise ArgumentError,
         "Expected nodes to have size of 6."
@@ -156,14 +156,14 @@ class UUID
     @clock_seq_low = clock_seq_low
     @nodes = nodes
   end
-  
+
   attr_accessor :time_low
   attr_accessor :time_mid
   attr_accessor :time_hi_and_version
   attr_accessor :clock_seq_hi_and_reserved
   attr_accessor :clock_seq_low
   attr_accessor :nodes
-  
+
   # Parses a UUID from a string.
   def UUID.parse(uuid_string)
     unless uuid_string.kind_of? String
@@ -261,7 +261,7 @@ class UUID
       clock_seq_low = clock_sequence & 0xFF;
       clock_seq_hi_and_reserved = (clock_sequence & 0x3F00) >> 8
       clock_seq_hi_and_reserved |= 0x80
-      
+
       return UUID.new(time_low, time_mid, time_hi_and_version,
         clock_seq_hi_and_reserved, clock_seq_low, nodes)
     end
@@ -271,12 +271,12 @@ class UUID
   def UUID.md5_create(namespace, name)
     return UUID.create_from_hash(Digest::MD5, namespace, name)
   end
-  
+
   # Creates a UUID using the SHA1 hash.  (Version 5)
   def UUID.sha1_create(namespace, name)
     return UUID.create_from_hash(Digest::SHA1, namespace, name)
   end
-  
+
   # This method applies only to version 1 UUIDs.
   # Checks if the node ID was generated from a random number
   # or from an IEEE 802 address (MAC address).
@@ -287,7 +287,7 @@ class UUID
     return false if self.version != 1
     return ((self.nodes.first & 0x01) == 1)
   end
-  
+
   # Returns true if this UUID is the
   # nil UUID (00000000-0000-0000-0000-000000000000).
   def nil_uuid?
@@ -301,7 +301,7 @@ class UUID
     end
     return true
   end
-  
+
   # Returns the UUID version type.
   # Possible values:
   # 1 - Time-based with unique or random host identifier
@@ -331,7 +331,7 @@ class UUID
     end
     return (result >> 6)
   end
-  
+
   # Returns true if this UUID is valid.
   def valid?
     if [0b000, 0b100, 0b110, 0b111].include?(self.variant) &&
@@ -341,7 +341,7 @@ class UUID
       return false
     end
   end
-  
+
   # Returns the IEEE 802 address used to generate this UUID or
   # nil if a MAC address was not used.
   def mac_address
@@ -351,7 +351,7 @@ class UUID
       sprintf("%2.2x", node)
     end).join(":")
   end
-  
+
   # Returns the timestamp used to generate this UUID
   def timestamp
     return nil if self.version != 1
@@ -363,7 +363,7 @@ class UUID
     return Time.at(
       (gmt_timestamp_100_nanoseconds - 0x01B21DD213814000) / 10000000.0)
   end
-  
+
   # Compares two UUIDs lexically
   def <=>(other_uuid)
     check = self.time_low <=> other_uuid.time_low
@@ -387,22 +387,22 @@ class UUID
     end
     return 0
   end
-  
+
   # Returns a representation of the object's state
   def inspect
     return "#<UUID:0x#{self.object_id.to_s(16)} UUID:#{self.to_s}>"
   end
-  
+
   # Returns the hex digest of the UUID object.
   def hexdigest
     return self.to_i.to_s(16)
   end
-  
+
   # Returns the raw bytes that represent this UUID.
   def raw
     return UUID.convert_int_to_byte_string(self.to_i, 16)
   end
-  
+
   # Returns a string representation for this UUID.
   def to_s
     result = sprintf("%8.8x-%4.4x-%4.4x-%2.2x%2.2x-", @time_low, @time_mid,
@@ -412,7 +412,7 @@ class UUID
     end
     return result
   end
-  
+
   # Returns an integer representation for this UUID.
   def to_i
     bytes = (time_low << 96) + (time_mid << 80) +
@@ -423,7 +423,7 @@ class UUID
     end
     return bytes
   end
-    
+
   # Returns a URI for this UUID.
   def to_uri
     return URI.parse(self.to_uri_string)
@@ -433,7 +433,7 @@ class UUID
   def to_uri_string
     return "urn:uuid:#{self.to_s}"
   end
-  
+
   def UUID.create_from_hash(hash_class, namespace, name) #:nodoc:
     if hash_class == Digest::MD5
       version = 3
@@ -449,7 +449,7 @@ class UUID
     hash_string = hash.to_s[0..31]
     new_uuid = UUID.parse("#{hash_string[0..7]}-#{hash_string[8..11]}-" +
       "#{hash_string[12..15]}-#{hash_string[16..19]}-#{hash_string[20..31]}")
-    
+
     new_uuid.time_hi_and_version &= 0x0FFF
     new_uuid.time_hi_and_version |= (version << 12)
     new_uuid.clock_seq_hi_and_reserved &= 0x3F
@@ -497,7 +497,7 @@ class UUID
       end
     end
   end
-  
+
   # Returns 128 bits of highly unpredictable data.
   # The random number generator isn't perfect, but it's
   # much, much better than the built-in pseudorandom number generators.
@@ -536,7 +536,7 @@ class UUID
     hash.update(performance.inspect)
     return UUID.convert_int_to_byte_string(hash.to_s[4..35].to_i(16), 16)
   end
-  
+
   def UUID.convert_int_to_byte_string(integer, size) #:nodoc:
     byte_string = ""
     for i in 0..(size - 1)
