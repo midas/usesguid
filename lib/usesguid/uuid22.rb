@@ -3,31 +3,31 @@
 
 #require 'uuidtools'
 
-class UUID
+class UUIDTools::UUID
 
   # Make an array of 64 URL-safe characters
-  @@chars64=('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a + ['-','_']
+  @@chars64 = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a + ['-', '_']
 
   # return a 22 byte URL-safe string, encoded six bits at a time using 64 characters
   def to_s22
-  	integer=self.to_i
-  	rval=''
+    integer = self.to_i
+    rval = ''
     22.times do
-      c=(integer & 0x3F)
-      rval+=@@chars64[c]
-      integer =integer >> 6
+      c = (integer & 0x3F)
+      rval += @@chars64[c]
+      integer = integer >> 6
     end
-    return rval.reverse
+    rval.reverse
   end
 
  	# Create a new UUID from a 22char string
   def self.parse22(s)
-    	# get the integer representation
+    # get the integer representation
     integer=0
     s.each_byte {|c|
     	integer = integer << 6
-      pos=@@chars64.index(c.chr)
-      integer+=pos
+      pos = @@chars64.index(c.chr)
+      integer += pos
     }
 
     time_low = (integer >> 96) & 0xFFFFFFFF

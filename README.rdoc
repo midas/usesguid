@@ -7,17 +7,24 @@
 
 This plugin for ActiveRecord makes the "ID" field into a URL-safe GUID
 It is a mashup by Andy Singleton <andy@assembla.com> that includes 
-* the UUID class from Bob Aman.
-* the plugin skeleton from Demetrius Nunes
+* the UUID class from Bob Aman. (Now uses uuidtools gem via bundler.)
+* the plugin skeleton from Demetrius Nunes (Now set up as a gem.)
 * the 22 character URL-safe format from Andy Singleton
-You can get standard 36 char UUID formats instead
+
+You can get standard 36 char UUID formats instead by setting ActiveRecord::Base.guid_compression
+to "s" (default).  Set to "s22" for 22 character URL-safe GUIDs
+
 TODO: Auto-detect a character ID field and use a GUID in this case (DRY principle)
 
 It has been extended by Brian Morearty with:
 * the addition of a mysql_create function (configurable with a guid_generator accessor)
   for much better performance
-* id assignment is now done before_create instead of after_initialize, to more closely
-  mimic the default Rails behavior of assigning an id upon save.
+* id assignment is now done via before_create instead of after_initialize BY DEFAULT,
+  to more closely mimic the default Rails behavior of assigning an id upon save.
+
+Extended by David Schmidt (davids@tower-mt.com) with:
+* Default callback (:before_create) can be overridden by setting
+  ActiveRecord::Base.guid_callback to a *valid* ActiveRecord callback.
 
 This library is free software; you can redistribute it and/or modify it
 under the terms of the MIT license.
@@ -58,8 +65,9 @@ If you use MySQL or SQL Server as your database, you can make guid generation mu
 database to generate GUIDs.
 
 You can accomplish this by specifying the GUID generator in an initializer file.  There are also options
-for guid_compression and guid_column.
+for guid_compression, guid_column and guid_callback.
 
   ActiveRecord::Base.guid_generator   = :mysql # mysql or sqlserver
   ActiveRecord::Base.guid_compression = :s     # :s for string or :s22 for compressed string
   ActiveRecord::Base.guid_column      = 'guid' # the name of your GUID column
+  ActiveRecord::Base.guid_callback    = :before_create # the name of the callback where GUID is created

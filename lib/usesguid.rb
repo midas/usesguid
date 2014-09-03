@@ -5,10 +5,8 @@ require 'usesguid/active_record_extensions'
 require 'usesguid/uuid22'
 require 'usesguid/uuid_mysql'
 require 'usesguid/uuid_sqlserver'
-require 'usesguid/uuidtools'
 
-module Usesguid
-  VERSION = '1.0.0'
-end
+# External dependency on uuidtools gem (https://github.com/sporkmonger/uuidtools)
+require 'uuidtools'
 
 ActiveRecord::Base.class_eval { include Usesguid::ActiveRecordExtensions } if defined?( ActiveRecord::Base )
