@@ -1,7 +1,7 @@
 # Copyright (c) 2005 Assembla, Inc.
 # MIT License
 
-#require 'uuidtools'
+require 'uuidtools'
 
 class UUIDTools::UUID
 
