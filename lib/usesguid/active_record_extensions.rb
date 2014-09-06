@@ -60,15 +60,17 @@ module Usesguid
           self.send(ActiveRecord::Base.guid_callback, :assign_guid)
 
           def assign_guid
-            self[ActiveRecord::Base.guid_column] ||=
-                (ActiveRecord::Base.guid_generator == :database ?
-                  UUIDTools::UUID.send( "#{ActiveRecord::Base.connection.adapter_name.downcase}_create" ) :
-                    UUIDTools::UUID.timestamp_create
-                ).send( "to_#{ActiveRecord::Base.guid_compression}" )
+            # In Rails 3, a string id field may default to an empty string.
+            if self[ActiveRecord::Base.guid_column].blank?
+              self[ActiveRecord::Base.guid_column] =
+                  (ActiveRecord::Base.guid_generator == :database ?
+                    UUIDTools::UUID.send( "#{ActiveRecord::Base.connection.adapter_name.downcase}_create" ) :
+                      UUIDTools::UUID.timestamp_create
+                  ).send( "to_#{ActiveRecord::Base.guid_compression}" )
+            end
           end
 
         end
-
       end
 
       def validate_guid( options={} )
